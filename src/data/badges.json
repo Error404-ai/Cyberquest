@@ -1,0 +1,92 @@
+[
+  {
+    "id": "first_steps",
+    "name": "First Steps",
+    "description": "Complete your first challenge",
+    "icon": "🎯",
+    "rarity": "common",
+    "category": "milestone",
+    "criteria": "Complete 1 game"
+  },
+  {
+    "id": "phishing_detective",
+    "name": "Phishing Detective",
+    "description": "Successfully identify 10 phishing emails",
+    "icon": "🕵️",
+    "rarity": "rare",
+    "category": "skill",
+    "criteria": "Identify 10 phishing emails correctly"
+  },
+  {
+    "id": "password_pro",
+    "name": "Password Pro",
+    "description": "Create 5 strong passwords",
+    "icon": "🔐",
+    "rarity": "rare",
+    "category": "skill",
+    "criteria": "Create 5 strong passwords (score > 70)"
+  },
+  {
+    "id": "url_guardian",
+    "name": "URL Guardian",
+    "description": "Correctly classify 20 URLs",
+    "icon": "🛡️",
+    "rarity": "rare",
+    "category": "skill",
+    "criteria": "Correctly classify 20 URLs"
+  },
+  {
+    "id": "week_warrior",
+    "name": "Week Warrior",
+    "description": "Maintain a 7-day login streak",
+    "icon": "🔥",
+    "rarity": "epic",
+    "category": "milestone",
+    "criteria": "Login for 7 consecutive days"
+  },
+  {
+    "id": "perfect_score",
+    "name": "Perfect Score",
+    "description": "Achieve 100% accuracy 3 times",
+    "icon": "⭐",
+    "rarity": "epic",
+    "category": "skill",
+    "criteria": "Get 100% accuracy in 3 different games"
+  },
+  {
+    "id": "century_club",
+    "name": "Century Club",
+    "description": "Earn 100 total points",
+    "icon": "💯",
+    "rarity": "common",
+    "category": "milestone",
+    "criteria": "Accumulate 100 points"
+  },
+  {
+    "id": "helping_hand",
+    "name": "Helping Hand",
+    "description": "Assist 5 community members",
+    "icon": "🤝",
+    "rarity": "rare",
+    "category": "community",
+    "criteria": "Help 5 users in community"
+  },
+  {
+    "id": "level_10",
+    "name": "Cyber Defender",
+    "description": "Reach level 10",
+    "icon": "🎖️",
+    "rarity": "epic",
+    "category": "milestone",
+    "criteria": "Reach level 10"
+  },
+  {
+    "id": "security_champion",
+    "name": "Security Champion",
+    "description": "Reach level 20",
+    "icon": "👑",
+    "rarity": "legendary",
+    "category": "milestone",
+    "criteria": "Reach level 20"
+  }
+]

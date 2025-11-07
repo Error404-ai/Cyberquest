@@ -1,0 +1,217 @@
+{
+  "phishing_detective": [
+    {
+      "id": "phish_001",
+      "type": "phishing",
+      "difficulty": "easy",
+      "sender": "security@paypa1-verification.com",
+      "subject": "URGENT: Your account will be suspended!",
+      "preview": "Dear user, we detected suspicious activity...",
+      "body": "Dear user,\n\nWe detected suspicious activity on your account. Click here immediately to verify your identity or your account will be locked within 24 hours.\n\n[VERIFY NOW]\n\nPayPal Security Team",
+      "correctAnswer": "phishing",
+      "redFlags": [
+        "Misspelled domain (paypa1 vs paypal)",
+        "Generic greeting (Dear user)",
+        "Urgency and fear tactics (24 hours, suspended)",
+        "Suspicious call-to-action",
+        "No personalization"
+      ],
+      "explanation": "This is a classic phishing attempt. The sender domain is misspelled (paypa1 instead of paypal), uses generic greetings, and creates artificial urgency to prompt immediate action without thinking."
+    },
+    {
+      "id": "legit_001",
+      "type": "legitimate",
+      "difficulty": "easy",
+      "sender": "no-reply@netflix.com",
+      "subject": "Your Netflix subscription has been renewed",
+      "preview": "Hi Sarah, your monthly subscription...",
+      "body": "Hi Sarah,\n\nYour Netflix Standard subscription has been renewed for $15.49. This charge will appear on your statement as NETFLIX.COM.\n\nQuestions? Visit our Help Center.\n\nThe Netflix Team",
+      "correctAnswer": "safe",
+      "redFlags": [],
+      "explanation": "This is a legitimate email from Netflix. It has a verified domain, personalized greeting, clear transaction details, and no urgent calls to action."
+    },
+    {
+      "id": "phish_002",
+      "type": "phishing",
+      "difficulty": "medium",
+      "sender": "support@amazon-security.tk",
+      "subject": "Unusual sign-in attempt detected",
+      "preview": "We noticed a new login from an unrecognized device...",
+      "body": "Hello,\n\nWe noticed a sign-in attempt from:\nLocation: Russia\nDevice: Unknown\nTime: 2:34 AM\n\nIf this wasn't you, please secure your account immediately:\n[SECURE MY ACCOUNT]\n\nAmazon Security",
+      "correctAnswer": "phishing",
+      "redFlags": [
+        "Suspicious TLD (.tk domain)",
+        "Not from official Amazon domain",
+        "Fear tactics (Russia, Unknown device)",
+        "Urgency to click link",
+        "Time pressure"
+      ],
+      "explanation": "While this email looks more sophisticated, the .tk top-level domain is a major red flag. Legitimate Amazon emails come from @amazon.com addresses. The use of fear (Russia, unknown device) is designed to make you panic and click without thinking."
+    },
+    {
+      "id": "legit_002",
+      "type": "legitimate",
+      "difficulty": "medium",
+      "sender": "noreply@github.com",
+      "subject": "[GitHub] Your password was changed",
+      "preview": "This email confirms that your password was recently changed...",
+      "body": "Hi CyberNinja,\n\nThis email confirms that your password for your GitHub account was changed on November 7, 2025 at 3:45 PM IST.\n\nIf you didn't make this change, please contact GitHub Support immediately.\n\nThanks,\nThe GitHub Team",
+      "correctAnswer": "safe",
+      "redFlags": [],
+      "explanation": "This is a legitimate security notification from GitHub. It has the correct sender domain, personalized username, specific timestamp, and provides a proper support contact without pressuring you to click suspicious links."
+    },
+    {
+      "id": "phish_003",
+      "type": "phishing",
+      "difficulty": "hard",
+      "sender": "service@paypal.com.secure-update.net",
+      "subject": "Action required: Confirm your information",
+      "preview": "Dear valued customer, we need you to confirm...",
+      "body": "Dear valued customer,\n\nAs part of our security measures, we require you to confirm your account information. Please review and update your details within 48 hours to avoid service interruption.\n\nYour cooperation is appreciated.\n\nBest regards,\nPayPal Customer Service",
+      "correctAnswer": "phishing",
+      "redFlags": [
+        "Domain spoofing (paypal.com.secure-update.net - actual domain is secure-update.net)",
+        "Generic greeting",
+        "Vague action required",
+        "Time pressure (48 hours)",
+        "Professional tone to appear legitimate"
+      ],
+      "explanation": "This is a sophisticated phishing attempt using subdomain spoofing. The email appears to come from paypal.com, but the actual domain is secure-update.net. Always check the full sender address carefully - the real domain comes AFTER the last period before the @ symbol."
+    }
+  ],
+  "password_strength": [
+    {
+      "id": "pwd_001",
+      "password": "password123",
+      "strength": "weak",
+      "crackTime": "1 second",
+      "score": 10,
+      "feedback": [
+        "Common password found in breach databases",
+        "Too short - add more characters",
+        "Predictable pattern",
+        "Add special characters and uppercase letters"
+      ]
+    },
+    {
+      "id": "pwd_002",
+      "password": "P@ssw0rd!",
+      "strength": "weak",
+      "crackTime": "2 minutes",
+      "score": 25,
+      "feedback": [
+        "Common substitutions (0 for o, @ for a)",
+        "Still found in password databases",
+        "Increase length to 12+ characters",
+        "Consider using a passphrase"
+      ]
+    },
+    {
+      "id": "pwd_003",
+      "password": "MyDog2023!",
+      "strength": "medium",
+      "crackTime": "3 days",
+      "score": 55,
+      "feedback": [
+        "Good mix of character types",
+        "Add more length for better security",
+        "Avoid personal information",
+        "Consider random words instead"
+      ]
+    },
+    {
+      "id": "pwd_004",
+      "password": "correct-horse-battery-staple",
+      "strength": "strong",
+      "crackTime": "550 years",
+      "score": 85,
+      "feedback": [
+        "Excellent passphrase!",
+        "Good length and randomness",
+        "Easy to remember, hard to crack",
+        "Consider adding numbers or symbols for even more security"
+      ]
+    },
+    {
+      "id": "pwd_005",
+      "password": "Tr7$mK9!pLx2QwY8#vN5",
+      "strength": "unbreakable",
+      "crackTime": "34,000 years",
+      "score": 100,
+      "feedback": [
+        "Exceptional password strength!",
+        "Perfect mix of all character types",
+        "Excellent length",
+        "Use a password manager to remember this"
+      ]
+    }
+  ],
+  "url_inspector": [
+    {
+      "id": "url_001",
+      "url": "https://www.amazon.com/deals",
+      "context": "Email from Amazon deals newsletter",
+      "correctAnswer": "safe",
+      "explanation": "This is a legitimate Amazon URL with HTTPS, correct domain spelling, and a logical path structure.",
+      "redFlags": []
+    },
+    {
+      "id": "url_002",
+      "url": "http://paypal-security.tk/verify.php",
+      "context": "Email claiming to be from PayPal",
+      "correctAnswer": "malicious",
+      "explanation": "Multiple red flags: HTTP instead of HTTPS, suspicious .tk TLD, not the official paypal.com domain, and a generic 'verify.php' page.",
+      "redFlags": [
+        "No HTTPS encryption",
+        "Suspicious .tk domain",
+        "Not official PayPal domain",
+        "Generic PHP file suggests phishing"
+      ]
+    },
+    {
+      "id": "url_003",
+      "url": "https://bit.ly/3xYz9Kp",
+      "context": "Social media message from unknown sender",
+      "correctAnswer": "suspicious",
+      "explanation": "URL shorteners hide the real destination. While not always malicious, they should be treated with caution, especially from unknown sources.",
+      "redFlags": [
+        "URL shortener hides destination",
+        "Can't verify actual website",
+        "Unknown sender increases risk"
+      ]
+    },
+    {
+      "id": "url_004",
+      "url": "https://amaz0n.com/account-update",
+      "context": "Email about account verification",
+      "correctAnswer": "malicious",
+      "explanation": "Typosquatting attack using '0' (zero) instead of 'o'. This is not the real amazon.com domain.",
+      "redFlags": [
+        "Typosquatting (amaz0n vs amazon)",
+        "Account update request is common phishing tactic",
+        "Domain doesn't match official Amazon"
+      ]
+    },
+    {
+      "id": "url_005",
+      "url": "https://paypal.com.securityupdate.ru/login",
+      "context": "Email about security update",
+      "correctAnswer": "malicious",
+      "explanation": "Domain spoofing - the real domain is securityupdate.ru, not paypal.com. The subdomain tricks users.",
+      "redFlags": [
+        "Real domain is .ru (Russia)",
+        "Subdomain spoofing technique",
+        "Not official PayPal domain",
+        "Security update is common phishing theme"
+      ]
+    },
+    {
+      "id": "url_006",
+      "url": "https://github.com/cyberquest/security-tool",
+      "context": "Link from tech community discussion",
+      "correctAnswer": "safe",
+      "explanation": "Legitimate GitHub repository URL with HTTPS and proper structure. Safe to visit.",
+      "redFlags": []
+    }
+  ]
+}
