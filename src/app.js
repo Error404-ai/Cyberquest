@@ -9,12 +9,9 @@ const logger = require('./utils/logger');
 
 const app = express();
 
-// Security middleware
 app.use(helmet());
 
-// ✅ IMPROVED CORS CONFIGURATION
 const getAllowedOrigins = () => {
-  // Default origins for development
   const defaultOrigins = [
     'http://localhost:3000',
     'http://localhost:3001',
@@ -24,47 +21,40 @@ const getAllowedOrigins = () => {
     'http://127.0.0.1:5173'
   ];
 
-  // Get origins from environment variable
   if (process.env.ALLOWED_ORIGINS) {
     const envOrigins = process.env.ALLOWED_ORIGINS
       .split(',')
-      .map(origin => origin.trim())
-      .filter(origin => origin.length > 0);
-    
-    // In development, merge with defaults; in production, use only env origins
-    if (process.env.NODE_ENV === 'production') {
-      return envOrigins;
-    } else {
-      return [...new Set([...defaultOrigins, ...envOrigins])];
-    }
+      .map(o => o.trim())
+      .filter(o => o.length > 0);
+
+    return process.env.NODE_ENV === 'production'
+      ? envOrigins
+      : [...new Set([...defaultOrigins, ...envOrigins])];
   }
 
   return defaultOrigins;
 };
 
 const corsOptions = {
-  origin: function (origin, callback) {
+  origin: (origin, callback) => {
     const allowedOrigins = getAllowedOrigins();
-    
-    // Log for debugging
-    logger.debug(`CORS Request from origin: ${origin}`);
-    logger.debug(`Allowed origins: ${allowedOrigins.join(', ')}`);
+    logger.debug(`🌍 CORS Request from: ${origin}`);
+    logger.debug(`✅ Allowed origins: ${allowedOrigins.join(', ')}`);
 
-    // Allow requests with no origin (like mobile apps, Postman, curl)
-    if (!origin) {
-      return callback(null, true);
-    }
+    if (!origin) return callback(null, true);
 
-    // Check if origin is allowed
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      logger.warn(`Blocked by CORS: ${origin}`);
-      callback(new Error('Not allowed by CORS'));
+      logger.warn(`🚫 Blocked by CORS: ${origin}`);
+      if (process.env.NODE_ENV !== 'production') {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
     }
   },
   credentials: true,
-  optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: [
     'Content-Type',
@@ -74,22 +64,17 @@ const corsOptions = {
     'Origin'
   ],
   exposedHeaders: ['Set-Cookie'],
-  maxAge: 86400 // 24 hours
+  optionsSuccessStatus: 200,
+  maxAge: 86400
 };
 
 app.use(cors(corsOptions));
-
-// Handle preflight requests explicitly
 app.options('*', cors(corsOptions));
 
-// Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Compression middleware
 app.use(compression());
 
-// Request logging (development only)
 if (process.env.NODE_ENV !== 'production') {
   app.use((req, res, next) => {
     logger.debug(`${req.method} ${req.path} - Origin: ${req.headers.origin || 'No origin'}`);
@@ -97,13 +82,10 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-// Apply rate limiting to all routes
 app.use(apiLimiter);
 
-// Mount API routes
 app.use(`/api/${process.env.API_VERSION || 'v1'}`, routes);
 
-// Root endpoint
 app.get('/', (req, res) => {
   res.json({
     message: 'CyberQuest API',
@@ -119,10 +101,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// 404 handler
 app.use(notFound);
-
-// Error handler (must be last)
 app.use(errorHandler);
 
 module.exports = app;
