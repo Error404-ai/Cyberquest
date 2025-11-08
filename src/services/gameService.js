@@ -4,9 +4,7 @@ const { calculatePoints, calculateXP } = require('../utils/scoring');
 const challengesData = require('../data/challenges.json');
 
 class GameService {
-  /**
-   * Get random challenges for a game type
-   */
+
   async getChallenges(gameType, difficulty = 'easy', count = 5) {
     try {
       const gameChallenges = challengesData[gameType];
@@ -19,20 +17,14 @@ class GameService {
         c => c.difficulty === difficulty
       );
 
-      // Randomize and select
       const shuffled = filteredChallenges.sort(() => 0.5 - Math.random());
       const selected = shuffled.slice(0, count);
 
-      // Remove correct answers from response
       return selected.map(({ correctAnswer, explanation, ...challenge }) => challenge);
     } catch (error) {
       throw new Error(`Failed to fetch challenges: ${error.message}`);
     }
   }
-
-  /**
-   * Submit game and calculate score
-   */
   async submitGame(userId, gameType, answers) {
     try {
       const gameChallenges = challengesData[gameType];
@@ -63,7 +55,9 @@ class GameService {
           correct: isCorrect,
           correctAnswer: challenge.correctAnswer,
           explanation: challenge.explanation,
-          timeTaken: answer.timeTaken
+          timeTaken: answer.timeTaken,
+            redFlags: challenge.redFlags,  
+  missedFlags: !isCorrect ? challenge.redFlags : [] 
         });
       });
 

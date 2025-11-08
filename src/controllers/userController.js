@@ -1,9 +1,6 @@
 const authService = require('../services/authService');
 const { sendSuccess, sendError } = require('../utils/response');
 
-/**
- * Update user profile
- */
 const updateProfile = async (req, res) => {
   try {
     const userId = req.user.uid;
@@ -17,16 +14,11 @@ const updateProfile = async (req, res) => {
   }
 };
 
-/**
- * Get user by ID
- */
 const getUserById = async (req, res) => {
   try {
     const { userId } = req.params;
     
     const user = await authService.getUserProfile(userId);
-    
-    // Remove sensitive information for public view
     delete user.email;
     delete user.achievements;
     
@@ -36,20 +28,31 @@ const getUserById = async (req, res) => {
   }
 };
 
-/**
- * Update user streak
- */
+
 const updateStreak = async (req, res) => {
-  try {
-    const userId = req.user.uid;
-    
-    // Implementation for streak update logic
-    // This would typically check last login and increment/reset streak
-    
-    sendSuccess(res, 'Streak updated successfully');
-  } catch (error) {
-    sendError(res, error.message, 400);
+  const userId = req.user.uid;
+  const userRef = db.collection('users').doc(userId);
+  const userDoc = await userRef.get();
+  const userData = userDoc.data();
+  
+  const lastActive = new Date(userData.lastActive);
+  const now = new Date();
+  const daysDiff = Math.floor((now - lastActive) / (1000 * 60 * 60 * 24));
+  
+  let newStreak = userData.streakDays || 0;
+  
+  if (daysDiff === 1) {
+    newStreak++;
+  } else if (daysDiff > 1) {
+    newStreak = 1;
   }
+  
+  await userRef.update({
+    streakDays: newStreak,
+    lastActive: now.toISOString()
+  });
+  
+  sendSuccess(res, 'Streak updated', { streakDays: newStreak });
 };
 
 module.exports = {

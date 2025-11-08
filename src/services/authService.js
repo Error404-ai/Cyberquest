@@ -2,12 +2,8 @@ const { auth, db } = require('../config/firebase');
 const { POINTS, XP } = require('../config/constants');
 
 class AuthService {
-  /**
-   * Create new user in Firebase Auth and Firestore
-   */
   async createUser(email, password, username) {
     try {
-      // Check if username exists
       const usernameQuery = await db.collection('users')
         .where('username', '==', username)
         .get();
@@ -15,15 +11,11 @@ class AuthService {
       if (!usernameQuery.empty) {
         throw new Error('Username already taken');
       }
-
-      // Create Firebase Auth user
       const userRecord = await auth.createUser({
         email,
         password,
         displayName: username
       });
-
-      // Create user document in Firestore
       const userData = {
         uid: userRecord.uid,
         email: email,
@@ -46,7 +38,9 @@ class AuthService {
         streakDays: 0,
         lastActive: new Date().toISOString(),
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+         lastDailyReset: new Date().toISOString(),  
+  lastWeeklyReset: new Date().toISOString() 
       };
 
       await db.collection('users').doc(userRecord.uid).set(userData);
@@ -60,10 +54,6 @@ class AuthService {
       throw new Error(`Failed to create user: ${error.message}`);
     }
   }
-
-  /**
-   * Get user profile from Firestore
-   */
   async getUserProfile(userId) {
     try {
       const userDoc = await db.collection('users').doc(userId).get();
@@ -78,9 +68,6 @@ class AuthService {
     }
   }
 
-  /**
-   * Update user profile
-   */
   async updateProfile(userId, updates) {
     try {
       const allowedUpdates = ['username', 'displayName', 'photoURL', 'bio'];
@@ -102,18 +89,12 @@ class AuthService {
     }
   }
 
-  /**
-   * Delete user account
-   */
   async deleteUser(userId) {
     try {
-      // Delete from Firebase Auth
       await auth.deleteUser(userId);
 
-      // Delete from Firestore
       await db.collection('users').doc(userId).delete();
 
-      // Delete user's game sessions
       const sessions = await db.collection('gameSessions')
         .where('userId', '==', userId)
         .get();
