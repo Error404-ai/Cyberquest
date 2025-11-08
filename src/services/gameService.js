@@ -1,4 +1,4 @@
-const { db } = require('../config/firebase');
+const { db, admin } = require('../config/firebase');
 const { POINTS, XP, GAME_TYPES } = require('../config/constants');
 const { calculatePoints, calculateXP } = require('../utils/scoring');
 const challengesData = require('../data/challenges.json');
@@ -25,6 +25,7 @@ class GameService {
       throw new Error(`Failed to fetch challenges: ${error.message}`);
     }
   }
+
   async submitGame(userId, gameType, answers) {
     try {
       const gameChallenges = challengesData[gameType];
@@ -56,8 +57,8 @@ class GameService {
           correctAnswer: challenge.correctAnswer,
           explanation: challenge.explanation,
           timeTaken: answer.timeTaken,
-            redFlags: challenge.redFlags,  
-  missedFlags: !isCorrect ? challenge.redFlags : [] 
+          redFlags: challenge.redFlags || [],
+          missedFlags: !isCorrect ? (challenge.redFlags || []) : []
         });
       });
 
@@ -132,6 +133,7 @@ class GameService {
 
       transaction.update(userRef, {
         totalPoints: newTotalPoints,
+        dailyPoints: (userData.dailyPoints || 0) + points,
         weeklyPoints: userData.weeklyPoints + points,
         xp: newXP,
         level: newLevel,
@@ -180,26 +182,84 @@ class GameService {
   }
 
   /**
-   * Get user's game history
+   * Get user's game history - FIXED VERSION
    */
   async getGameHistory(userId, limit = 10, gameType = null) {
     try {
+      console.log(`Fetching game history for user: ${userId}, gameType: ${gameType}, limit: ${limit}`);
+      
+      // Build query step by step
       let query = db.collection('gameSessions')
-        .where('userId', '==', userId)
-        .orderBy('completedAt', 'desc')
-        .limit(limit);
+        .where('userId', '==', userId);
 
+      // Add gameType filter BEFORE orderBy if provided
       if (gameType) {
         query = query.where('gameType', '==', gameType);
       }
 
-      const snapshot = await query.get();
+      // Add orderBy and limit
+      query = query
+        .orderBy('completedAt', 'desc')
+        .limit(limit);
+
+      // Execute query with timeout
+      const snapshot = await Promise.race([
+        query.get(),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Query timeout')), 10000)
+        )
+      ]);
+      
+      console.log(`Found ${snapshot.size} game sessions`);
+
+      if (snapshot.empty) {
+        return [];
+      }
       
       return snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
     } catch (error) {
+      console.error('Error fetching game history:', error);
+      
+      // Check if it's an index error
+      if (error.code === 9 || error.message.includes('index')) {
+        console.error('Firestore index required!');
+        console.error('Create index at: https://console.firebase.google.com/project/_/firestore/indexes');
+        
+        // Fallback: Get all sessions for user and filter in memory
+        try {
+          console.log('Attempting fallback query without orderBy...');
+          const fallbackQuery = db.collection('gameSessions')
+            .where('userId', '==', userId)
+            .limit(50); // Get more for sorting
+
+          const snapshot = await fallbackQuery.get();
+          
+          let sessions = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+
+          // Filter by gameType if needed
+          if (gameType) {
+            sessions = sessions.filter(s => s.gameType === gameType);
+          }
+
+          // Sort by completedAt in memory
+          sessions.sort((a, b) => 
+            new Date(b.completedAt) - new Date(a.completedAt)
+          );
+
+          // Return limited results
+          return sessions.slice(0, limit);
+        } catch (fallbackError) {
+          console.error('Fallback query also failed:', fallbackError);
+          throw new Error('Failed to fetch game history. Please check Firestore indexes.');
+        }
+      }
+      
       throw new Error(`Failed to fetch game history: ${error.message}`);
     }
   }
@@ -209,6 +269,8 @@ class GameService {
    */
   async getUserStats(userId) {
     try {
+      console.log(`Fetching stats for user: ${userId}`);
+      
       const userDoc = await db.collection('users').doc(userId).get();
       
       if (!userDoc.exists) {
@@ -217,10 +279,15 @@ class GameService {
 
       const userData = userDoc.data();
 
-      // Get game-specific stats
-      const sessionsSnapshot = await db.collection('gameSessions')
-        .where('userId', '==', userId)
-        .get();
+      // Get game-specific stats with timeout
+      const sessionsSnapshot = await Promise.race([
+        db.collection('gameSessions')
+          .where('userId', '==', userId)
+          .get(),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Query timeout')), 10000)
+        )
+      ]);
 
       const gameStats = {
         totalGames: sessionsSnapshot.size,
@@ -252,6 +319,8 @@ class GameService {
         ? (totalAccuracy / sessionsSnapshot.size).toFixed(2) 
         : 0;
 
+      console.log(`Stats fetched successfully: ${gameStats.totalGames} games`);
+
       return {
         user: {
           level: userData.level,
@@ -264,6 +333,7 @@ class GameService {
         games: gameStats
       };
     } catch (error) {
+      console.error('Error fetching stats:', error);
       throw new Error(`Failed to fetch stats: ${error.message}`);
     }
   }
