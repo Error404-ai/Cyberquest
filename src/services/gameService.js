@@ -1,6 +1,6 @@
 const { db } = require('../config/firebase');
 const { POINTS, XP, GAME_TYPES } = require('../config/constants');
-const { calculatePoints, calculateXP } = require('../utils/scoring.util');
+const { calculatePoints, calculateXP } = require('../utils/scoring');
 const challengesData = require('../data/challenges.json');
 
 class GameService {

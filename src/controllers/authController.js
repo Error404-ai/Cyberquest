@@ -1,5 +1,5 @@
-const authService = require('../services/auth.service');
-const { sendSuccess, sendError } = require('../utils/response.util');
+const authService = require('../services/authService');
+const { sendSuccess, sendError } = require('../utils/response');
 
 /**
  * Register new user

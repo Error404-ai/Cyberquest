@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const leaderboardController = require('../controllers/leaderboard.controller');
-const { verifyToken, optionalAuth } = require('../middleware/auth.middleware');
+const leaderboardController = require('../controllers/leaderboard');
+const { verifyToken, optionalAuth } = require('../middlewares/authMiddleware');
 
 /**
  * @route   GET /api/leaderboard/global

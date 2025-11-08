@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { sendError } = require('../utils/response.util');
+const { sendError } = require('../utils/response');
 
 /**
  * Validate request body against Joi schema

@@ -1,5 +1,5 @@
-const gameService = require('../services/game.service');
-const { sendSuccess, sendError } = require('../utils/response.util');
+const gameService = require('../services/gameService');
+const { sendSuccess, sendError } = require('../utils/response');
 
 const getChallenges = async (req, res) => {
   try {

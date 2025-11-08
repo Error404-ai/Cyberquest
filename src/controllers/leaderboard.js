@@ -1,5 +1,5 @@
-const leaderboardService = require('../services/leaderboard.service');
-const { sendSuccess, sendError } = require('../utils/response.util');
+const leaderboardService = require('../services/leaderboard');
+const { sendSuccess, sendError } = require('../utils/response');
 
 /**
  * Get global leaderboard

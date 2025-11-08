@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const authController = require('../controllers/auth.controller');
-const { verifyToken } = require('../middleware/auth.middleware');
-const { validate, schemas } = require('../middleware/validation.middleware');
-const { authLimiter } = require('../middleware/rateLimit.middleware');
+const authController = require('../controllers/authController');
+const { verifyToken } = require('../middlewares/authMiddleware');
+const { validate, schemas } = require('../middlewares/validations');
+const { authLimiter } = require('../middlewares/rateLimit');
 
 /**
  * @route   POST /api/auth/signup

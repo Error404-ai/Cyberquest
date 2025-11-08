@@ -3,9 +3,9 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const routes = require('./routes');
-const { errorHandler, notFound } = require('./middleware/error.middleware');
-const { apiLimiter } = require('./middleware/rateLimit.middleware');
-const logger = require('./utils/logger.util');
+const { errorHandler, notFound } = require('./middlewares/errorMiddleware');
+const { apiLimiter } = require('./middlewares/rateLimit');
+const logger = require('./utils/logger');
 
 const app = express();
 

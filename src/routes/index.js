@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-// or './auth.routes' if renamed
+const authRoutes = require('./authRoutes');        
 const userRoutes = require('./userRoutes');        
-const gameRoutes = require('./gameRoutes');        
+const gameRoutes = require('./gameRoutes');       
 const leaderboardRoutes = require('./leaderboard'); 
 const achievementRoutes = require('./achievements'); 
 

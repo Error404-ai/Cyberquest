@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const gameController = require('../controllers/game.controller');
-const { verifyToken } = require('../middleware/auth.middleware');
-const { validate, schemas } = require('../middleware/validation.middleware');
-const { gameLimiter } = require('../middleware/rateLimit.middleware');
+const gameController = require('../controllers/gameController');
+const { verifyToken } = require('../middlewares/authMiddleware');
+const { validate, schemas } = require('../middlewares/validations');
+const { gameLimiter } = require('../middlewares/rateLimit');
 
 /**
  * @route   GET /api/games/:gameType/challenges

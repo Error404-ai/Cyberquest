@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const achievementController = require('../controllers/achievement.controller');
-const { verifyToken } = require('../middleware/auth.middleware');
+const achievementController = require('../controllers/achievements');
+const { verifyToken } = require('../middlewares/authMiddleware');
 
 /**
  * @route   GET /api/achievements

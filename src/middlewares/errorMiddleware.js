@@ -1,4 +1,4 @@
-const logger = require('../utils/logger.util');
+const logger = require('../utils/logger');
 
 /**
  * Global error handler

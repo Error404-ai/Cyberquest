@@ -1,5 +1,5 @@
-const achievementService = require('../services/achievement.service');
-const { sendSuccess, sendError } = require('../utils/response.util');
+const achievementService = require('../services/achievements');
+const { sendSuccess, sendError } = require('../utils/response');
 
 /**
  * Get user's achievements

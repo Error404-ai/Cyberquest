@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/user.controller');
-const { verifyToken } = require('../middleware/auth.middleware');
-const { validate, schemas } = require('../middleware/validation.middleware');
+const userController = require('../controllers/userController');
+const { verifyToken } = require('../middlewares/authMiddleware');
+const { validate, schemas } = require('../middlewares/validations');
 
 /**
  * @route   PUT /api/users/profile

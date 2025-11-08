@@ -1,5 +1,5 @@
 const { auth } = require('../config/firebase');
-const { sendError } = require('../utils/response.util');
+const { sendError } = require('../utils/response');
 
 /**
  * Verify Firebase ID token from request header
