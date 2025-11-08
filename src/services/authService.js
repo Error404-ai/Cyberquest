@@ -11,11 +11,13 @@ class AuthService {
       if (!usernameQuery.empty) {
         throw new Error('Username already taken');
       }
+      
       const userRecord = await auth.createUser({
         email,
         password,
         displayName: username
       });
+      
       const userData = {
         uid: userRecord.uid,
         email: email,
@@ -24,7 +26,9 @@ class AuthService {
         photoURL: null,
         bio: '',
         totalPoints: 0,
+        dailyPoints: 0,          // ADDED
         weeklyPoints: 0,
+        cyberCoins: 0,           // ADDED (if different from points)
         level: 1,
         xp: 0,
         badges: [],
@@ -37,10 +41,11 @@ class AuthService {
         },
         streakDays: 0,
         lastActive: new Date().toISOString(),
+        lastDailyChallengeDate: null,  // ADDED
+        lastDailyReset: new Date().toISOString(),
+        lastWeeklyReset: new Date().toISOString(),
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-         lastDailyReset: new Date().toISOString(),  
-  lastWeeklyReset: new Date().toISOString() 
+        updatedAt: new Date().toISOString()
       };
 
       await db.collection('users').doc(userRecord.uid).set(userData);
@@ -54,6 +59,7 @@ class AuthService {
       throw new Error(`Failed to create user: ${error.message}`);
     }
   }
+
   async getUserProfile(userId) {
     try {
       const userDoc = await db.collection('users').doc(userId).get();
@@ -62,7 +68,20 @@ class AuthService {
         throw new Error('User not found');
       }
 
-      return userDoc.data();
+      const userData = userDoc.data();
+      
+      // Calculate and include user's rank
+      const higherRankedSnapshot = await db.collection('users')
+        .where('totalPoints', '>', userData.totalPoints)
+        .count()
+        .get();
+      
+      const rank = higherRankedSnapshot.data().count + 1;
+      
+      return {
+        ...userData,
+        rank  // ADDED: Include rank in profile response
+      };
     } catch (error) {
       throw new Error(`Failed to fetch profile: ${error.message}`);
     }
@@ -92,7 +111,6 @@ class AuthService {
   async deleteUser(userId) {
     try {
       await auth.deleteUser(userId);
-
       await db.collection('users').doc(userId).delete();
 
       const sessions = await db.collection('gameSessions')

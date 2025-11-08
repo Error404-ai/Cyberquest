@@ -4,7 +4,9 @@ const authRoutes = require('./authRoutes');
 const userRoutes = require('./userRoutes');        
 const gameRoutes = require('./gameRoutes');       
 const leaderboardRoutes = require('./leaderboard'); 
-const achievementRoutes = require('./achievements'); 
+const achievementRoutes = require('./achievements');
+const dailyChallengeRoutes = require('./dailyChallengeRoutes');  // NEW
+const analyticsRoutes = require('./analyticsRoutes');            // NEW
 
 router.get('/health', (req, res) => {
   res.json({
@@ -20,5 +22,7 @@ router.use('/users', userRoutes);
 router.use('/games', gameRoutes);
 router.use('/leaderboard', leaderboardRoutes);
 router.use('/achievements', achievementRoutes);
+router.use('/challenges', dailyChallengeRoutes);  // NEW
+router.use('/analytics', analyticsRoutes);        // NEW
 
 module.exports = router;
