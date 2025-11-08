@@ -50,4 +50,14 @@ router.get(
   gameController.getStats
 );
 
+/**
+ * @route   POST /api/games/password-strength/analyze
+ * @desc    Analyze password strength
+ * @access  Public
+ */
+router.post(
+  '/password-strength/analyze',
+  gameController.analyzePasswordStrength
+);
+
 module.exports = router;
